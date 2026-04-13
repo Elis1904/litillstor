@@ -1,0 +1,31 @@
+name: Sync game to main
+
+on:
+  push:
+    branches:
+      - copilot/create-simple-offline-web-app
+    paths:
+      - 'index.html'
+      - 'app.js'
+      - 'styles.css'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push game files to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git checkout ${{ github.ref_name }} -- index.html app.js styles.css
+          git add index.html app.js styles.css
+          git diff --cached --quiet || git commit -m "chore: sync game files from ${{ github.ref_name }}"
+          git push origin main
