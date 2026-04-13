@@ -75,7 +75,7 @@ h1 {
 
 .subtitle {
   font-size: 1.15rem;
-  color: #566;
+  color: #556666;
   line-height: 1.55;
 }
 
@@ -186,7 +186,7 @@ h1 {
 .btn-secondary {
   background: rgba(255, 255, 255, 0.85);
   color: var(--text);
-  border: 2px solid #cdd;
+  border: 2px solid #ccdddd;
   border-radius: 12px;
   padding: 12px 28px;
   font-size: 1.05rem;

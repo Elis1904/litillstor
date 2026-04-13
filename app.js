@@ -158,7 +158,7 @@ function renderQuestion() {
   const leftPx   = q.bigLeft ? bigPx   : smallPx;
   const rightPx  = q.bigLeft ? smallPx : bigPx;
   const leftType = q.bigLeft ? 'big'   : 'small';
-  const rightType= q.bigLeft ? 'small' : 'big';
+  const rightType = q.bigLeft ? 'small' : 'big';
 
   // Inject SVG markup
   shapeLeft.innerHTML     = makeSVG(q.shape, leftPx);
