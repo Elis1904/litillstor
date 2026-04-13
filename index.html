@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stór og Lítill</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Start screen ────────────────────────────────────────────── -->
+  <div id="start-screen" class="screen active">
+    <div class="card center-card">
+      <div class="logo">🔷</div>
+      <h1>Stór og Lítill</h1>
+      <p class="subtitle">Hlusta á hljóðið og smelltu á rétta formið!</p>
+      <button id="start-btn" class="btn-primary">▶ Byrja</button>
+    </div>
+  </div>
+
+  <!-- ── Game screen ─────────────────────────────────────────────── -->
+  <div id="game-screen" class="screen">
+    <div class="hud">
+      <span id="progress-text">Spurning 1/20</span>
+      <span id="score-text">Stig: 0</span>
+    </div>
+
+    <div class="shapes-row">
+      <button id="shape-left"  class="shape-card" aria-label="Vinstra form"></button>
+      <button id="shape-right" class="shape-card" aria-label="Hægra form"></button>
+    </div>
+
+    <button id="replay-btn" class="btn-secondary">🔊 Spila aftur</button>
+  </div>
+
+  <!-- ── End screen ──────────────────────────────────────────────── -->
+  <div id="end-screen" class="screen">
+    <div class="card center-card">
+      <div class="logo">🎉</div>
+      <h1>Lokið!</h1>
+      <p id="final-score-text" class="subtitle">Þú fékkst 0 af 20 rétt!</p>
+      <button id="restart-btn" class="btn-primary">🔄 Byrja aftur</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
