@@ -227,8 +227,7 @@ function startGame() {
 startBtn.addEventListener('click',   startGame);
 restartBtn.addEventListener('click', startGame);
 
-// Byrja leikinn sjálfkrafa við hleðslu síðunnar
-startGame();
+startGame(); // Byrja leikinn sjálfkrafa við hleðslu síðunnar
 
 replayBtn.addEventListener('click', () => {
   if (idx < TOTAL) {
