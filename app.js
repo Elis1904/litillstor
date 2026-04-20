@@ -249,6 +249,9 @@ replayBtn.addEventListener('click', () => {
     speak(q.correct === 'big' ? 'stór' : 'lítill');
   }
 });
-
+const backBtn = document.getElementById('back-btn');
+backBtn.addEventListener('click', () => {
+  showScreen('start');
+});
 shapeLeft.addEventListener('click',  () => answer(shapeLeft));
 shapeRight.addEventListener('click', () => answer(shapeRight));
