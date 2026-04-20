@@ -249,9 +249,12 @@ replayBtn.addEventListener('click', () => {
     speak(q.correct === 'big' ? 'stór' : 'lítill');
   }
 });
-const backBtn = document.getElementById('back-btn');
-backBtn.addEventListener('click', () => {
-  showScreen('start');
-});
+// Back button - veldu bara fyrsta .btn-secondary sem er "Til baka"
+const backBtn = document.querySelector('#back-btn');
+if (backBtn) {
+  backBtn.addEventListener('click', () => {
+    showScreen('start');
+  });
+}
 shapeLeft.addEventListener('click',  () => answer(shapeLeft));
 shapeRight.addEventListener('click', () => answer(shapeRight));
