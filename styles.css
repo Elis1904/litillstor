@@ -1,4 +1,4 @@
-/* ── Reset & base ──────────────────────────────────────────────────────────── */
+/* ── Reset & base ──────────────────────────────────────────────────────────*/
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -28,7 +28,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Screens ───────────────────────────────────────────────────────────────── */
+/* ── Screens ───────────────────────────────────────────────────────────*/
 .screen {
   display: none;
   width: 100%;
@@ -43,13 +43,13 @@ body {
   display: flex;
 }
 
-/* ── Card (start / end) ────────────────────────────────────────────────────── */
+/* ── Card (start / end) ────────────────────────────────────────────────── */
 .card {
   background: var(--card-bg);
   border-radius: 28px;
   padding: 40px 48px;
   box-shadow: var(--shadow);
-  max-width: 480px;
+  max-width: 600px;
   width: 100%;
 }
 
@@ -57,7 +57,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
   text-align: center;
 }
 
@@ -79,7 +79,58 @@ h1 {
   line-height: 1.55;
 }
 
-/* ── HUD ───────────────────────────────────────────────────────────────────── */
+/* ── Mode Selector ─────────────────────────────────────────────────────────*/
+.mode-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 16px;
+  background: rgba(74, 144, 226, 0.1);
+  border: 2px solid var(--primary);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.mode-btn:hover {
+  background: rgba(74, 144, 226, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.mode-btn:active {
+  transform: translateY(0);
+}
+
+.mode-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.mode-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.mode-desc {
+  font-size: 0.75rem;
+  color: #7a8a8a;
+  line-height: 1.2;
+}
+
+/* ── HUD ────────────────────────────────────────────────────────────*/
 .hud {
   display: flex;
   justify-content: space-between;
@@ -97,7 +148,7 @@ h1 {
   margin-bottom: 16px;
 }
 
-/* ── Shapes row ────────────────────────────────────────────────────────────── */
+/* ── Shapes row ──────────────────────────────────────────────────────────*/
 .shapes-row {
   display: flex;
   flex-direction: row;
@@ -158,7 +209,7 @@ h1 {
 .shape-card.correct   .shape-fill { fill: var(--correct);   }
 .shape-card.incorrect .shape-fill { fill: var(--incorrect); }
 
-/* ── Buttons ───────────────────────────────────────────────────────────────── */
+/* ── Buttons ───────────────────────────────────────────────────────────*/
 .btn-primary {
   background: var(--primary);
   color: #fff;
@@ -200,7 +251,7 @@ h1 {
   transform: translateY(-1px);
 }
 
-/* ── Responsive ────────────────────────────────────────────────────────────── */
+/* ── Responsive ──────────────────────────────────────────────────────────*/
 @media (max-width: 540px) {
   .shapes-row  { gap: 16px; }
   .card        { padding: 32px 24px; }
@@ -208,8 +259,30 @@ h1 {
   .subtitle    { font-size: 1rem; }
   .hud         { font-size: 1rem; padding: 10px 16px; }
   .btn-primary { padding: 14px 36px; font-size: 1.1rem; }
+  
+  .mode-selector {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .mode-btn {
+    padding: 16px 12px;
+  }
+  
+  .mode-icon {
+    font-size: 1.5rem;
+  }
+  
+  .mode-title {
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 380px) {
   .shapes-row { gap: 10px; }
+  
+  .mode-selector {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
