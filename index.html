@@ -8,14 +8,13 @@
 </head>
 <body>
 
-  <!-- ── Start screen ────────────────────────────────────────────── -->
+  <!-- Start screen with mode selection -->
   <div id="start-screen" class="screen active">
     <div class="card center-card">
       <div class="logo">🔷</div>
       <h1>Stór og Lítill</h1>
       <p class="subtitle">Veldu hvernig leik þú vilt spila!</p>
       
-      <!-- Mode selection buttons -->
       <div class="mode-selector">
         <button class="mode-btn" data-mode="random">
           <span class="mode-icon">🎲</span>
@@ -41,22 +40,23 @@
     </div>
   </div>
 
-  <!-- ── Game screen ─────────────────────────────────────────────── -->
+  <!-- Game screen -->
   <div id="game-screen" class="screen">
     <div class="hud">
       <span id="progress-text">Spurning 1/20</span>
       <span id="score-text">Stig: 0</span>
+      <button id="menu-btn" class="btn-menu">≡ Valmynd</button>
     </div>
 
     <div class="shapes-row">
-      <button id="shape-left"  class="shape-card" aria-label="Vinstra form"></button>
-      <button id="shape-right" class="shape-card" aria-label="Hægra form"></button>
+      <button id="shape-left" class="shape-card"></button>
+      <button id="shape-right" class="shape-card"></button>
     </div>
 
     <button id="replay-btn" class="btn-secondary">🔊 Spila aftur</button>
   </div>
-<button id="back-btn" class="btn-secondary">⬅ Til baka</button>
-  <!-- ── End screen ──────────────────────────────────────────────── -->
+
+  <!-- End screen -->
   <div id="end-screen" class="screen">
     <div class="card center-card">
       <div class="logo">🎉</div>
