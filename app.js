@@ -107,18 +107,37 @@ function buildQuestions() {
         smallPx: randInt(90, 120)
       });
     } else if (gameMode === 'alternating') {
+      // Tvö mismunandi form í mismunandi stærðum
+      let shape1 = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+      let shape2 = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+      
+      // Gakktu úr skugga um að formin séu mismunandi
+      while (shape2.id === shape1.id) {
+        shape2 = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+      }
+      
+      const correctIsLeft = Math.random() < 0.5;
+      const leftShape = correctIsLeft ? shape1 : shape2;
+      const rightShape = correctIsLeft ? shape2 : shape1;
+      
+      const leftSize = i % 2 === 0 ? 'big' : 'small';
+      const rightSize = i % 2 === 0 ? 'small' : 'big';
+      
       questions.push({
-        shape: randomShape,
-        correct: i % 2 === 0 ? 'big' : 'small',
-        bigLeft: Math.random() < 0.5,
-        bigPx: randInt(160, 200),
-        smallPx: randInt(90, 120)
+        leftShape,
+        rightShape,
+        correct: leftSize,
+        leftSize,
+        rightSize,
+        leftPx: leftSize === 'big' ? randInt(160, 200) : randInt(90, 120),
+        rightPx: rightSize === 'big' ? randInt(160, 200) : randInt(90, 120)
       });
     }
   }
   
   return questions;
 }
+
 function makeSVG(shape, px) {
   return `<svg viewBox="0 0 100 100" width="${px}" height="${px}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shape.svg}</svg>`;
 }
@@ -129,32 +148,56 @@ function renderQuestion() {
   const q = questions[idx];
   const scale = scaleFactor();
 
-  const bigPx = Math.round(q.bigPx * scale);
-  const smallPx = Math.round(q.smallPx * scale);
-
   progressEl.textContent = `Spurning ${idx + 1}/${TOTAL}`;
   scoreEl.textContent = `Stig: ${score}`;
 
-  const leftPx = q.bigLeft ? bigPx : smallPx;
-  const rightPx = q.bigLeft ? smallPx : bigPx;
-  const leftType = q.bigLeft ? 'big' : 'small';
-  const rightType = q.bigLeft ? 'small' : 'big';
+  if (gameMode === 'alternating') {
+    // Skipandi mode með mismunandi formum
+    const leftPx = Math.round(q.leftPx * scale);
+    const rightPx = Math.round(q.rightPx * scale);
 
-  shapeLeft.innerHTML = makeSVG(q.shape, leftPx);
-  shapeLeft.dataset.type = leftType;
-  shapeLeft.className = 'shape-card';
-  shapeLeft.disabled = false;
+    shapeLeft.innerHTML = makeSVG(q.leftShape, leftPx);
+    shapeLeft.dataset.type = q.leftSize;
+    shapeLeft.className = 'shape-card';
+    shapeLeft.disabled = false;
 
-  shapeRight.innerHTML = makeSVG(q.shape, rightPx);
-  shapeRight.dataset.type = rightType;
-  shapeRight.className = 'shape-card';
-  shapeRight.disabled = false;
+    shapeRight.innerHTML = makeSVG(q.rightShape, rightPx);
+    shapeRight.dataset.type = q.rightSize;
+    shapeRight.className = 'shape-card';
+    shapeRight.disabled = false;
 
-  const pad = 32;
-  shapeLeft.style.minWidth = shapeLeft.style.minHeight = (leftPx + pad) + 'px';
-  shapeRight.style.minWidth = shapeRight.style.minHeight = (rightPx + pad) + 'px';
+    const pad = 32;
+    shapeLeft.style.minWidth = shapeLeft.style.minHeight = (leftPx + pad) + 'px';
+    shapeRight.style.minWidth = shapeRight.style.minHeight = (rightPx + pad) + 'px';
 
-  console.log('Question:', idx, 'Correct:', q.correct, 'Left:', leftType, 'Right:', rightType);
+    console.log('Alternating Question:', idx, 'Correct:', q.correct, 'Left:', q.leftSize, 'Right:', q.rightSize);
+  } else {
+    // Aðrir modes með sama formi
+    const bigPx = Math.round(q.bigPx * scale);
+    const smallPx = Math.round(q.smallPx * scale);
+
+    const leftPx = q.bigLeft ? bigPx : smallPx;
+    const rightPx = q.bigLeft ? smallPx : bigPx;
+    const leftType = q.bigLeft ? 'big' : 'small';
+    const rightType = q.bigLeft ? 'small' : 'big';
+
+    shapeLeft.innerHTML = makeSVG(q.shape, leftPx);
+    shapeLeft.dataset.type = leftType;
+    shapeLeft.className = 'shape-card';
+    shapeLeft.disabled = false;
+
+    shapeRight.innerHTML = makeSVG(q.shape, rightPx);
+    shapeRight.dataset.type = rightType;
+    shapeRight.className = 'shape-card';
+    shapeRight.disabled = false;
+
+    const pad = 32;
+    shapeLeft.style.minWidth = shapeLeft.style.minHeight = (leftPx + pad) + 'px';
+    shapeRight.style.minWidth = shapeRight.style.minHeight = (rightPx + pad) + 'px';
+
+    console.log('Question:', idx, 'Correct:', q.correct, 'Left:', leftType, 'Right:', rightType);
+  }
+
   speak(q.correct === 'big' ? 'stór' : 'lítill');
 }
 
