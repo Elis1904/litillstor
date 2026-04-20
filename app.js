@@ -143,23 +143,29 @@ function renderQuestion() {
   shapeLeft.innerHTML = makeSVG(q.shape, leftPx);
   shapeLeft.dataset.type = leftType;
   shapeLeft.className = 'shape-card';
+  shapeLeft.disabled = false;
 
   shapeRight.innerHTML = makeSVG(q.shape, rightPx);
   shapeRight.dataset.type = rightType;
   shapeRight.className = 'shape-card';
+  shapeRight.disabled = false;
 
   const pad = 32;
   shapeLeft.style.minWidth = shapeLeft.style.minHeight = (leftPx + pad) + 'px';
   shapeRight.style.minWidth = shapeRight.style.minHeight = (rightPx + pad) + 'px';
 
-  shapeLeft.disabled = false;
-  shapeRight.disabled = false;
-
+  console.log('Question:', idx, 'Correct:', q.correct, 'Left:', leftType, 'Right:', rightType);
   speak(q.correct === 'big' ? 'stór' : 'lítill');
 }
 
 function answer(card) {
-  if (locked) return;
+  console.log('Answer clicked on:', card.dataset.type);
+  
+  if (locked) {
+    console.log('Locked, ignoring click');
+    return;
+  }
+  
   locked = true;
 
   shapeLeft.disabled = true;
@@ -167,6 +173,8 @@ function answer(card) {
 
   const q = questions[idx];
   const correct = card.dataset.type === q.correct;
+
+  console.log('Question correct answer:', q.correct, 'Your answer:', card.dataset.type, 'Correct?:', correct);
 
   if (correct) {
     score++;
@@ -192,6 +200,7 @@ function startGame() {
   questions = buildQuestions();
   idx = 0;
   score = 0;
+  console.log('Game started with mode:', gameMode);
   showScreen('game');
   renderQuestion();
 }
@@ -200,6 +209,7 @@ function startGame() {
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
     gameMode = e.currentTarget.dataset.mode;
+    console.log('Mode selected:', gameMode);
     startGame();
   });
 });
@@ -221,3 +231,5 @@ replayBtn.addEventListener('click', () => {
 
 shapeLeft.addEventListener('click', () => answer(shapeLeft));
 shapeRight.addEventListener('click', () => answer(shapeRight));
+
+console.log('App loaded successfully');
