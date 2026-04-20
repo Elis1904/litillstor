@@ -1,6 +1,6 @@
 'use strict';
 
-// ── Shape definitions ─────────────────────────────────────────────────────────
+// ── Shape definitions ────────────────────────────────────────────────────────
 // All shapes use viewBox="0 0 100 100" and a class="shape-fill" for colour.
 const SHAPES = [
   {
@@ -47,13 +47,14 @@ const SHAPES = [
 
 const TOTAL = 20;
 
-// ── Game state ────────────────────────────────────────────────────────────────
+// ── Game state ──────────────────────────────────────────────────────────
 let questions = [];
 let idx       = 0;
 let score     = 0;
 let locked    = false;   // prevent double-answer while feedback is shown
+let gameMode  = 'random'; // current game mode
 
-// ── DOM references ────────────────────────────────────────────────────────────
+// ── DOM references ─────────────────────────────────────────────────────
 const screens = {
   start: document.getElementById('start-screen'),
   game:  document.getElementById('game-screen'),
@@ -69,7 +70,7 @@ const startBtn   = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 const finalEl    = document.getElementById('final-score-text');
 
-// ── Speech synthesis ──────────────────────────────────────────────────────────
+// ── Speech synthesis ────────────────────────────────────────────────────
 let icelandicVoice = null;
 
 function loadVoices() {
@@ -99,7 +100,7 @@ function speak(text) {
   speechSynthesis.speak(u);
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────
 function randInt(lo, hi) {
   return Math.floor(Math.random() * (hi - lo + 1)) + lo;
 }
@@ -119,23 +120,59 @@ function showScreen(name) {
   });
 }
 
-// ── Question generation ───────────────────────────────────────────────────────
+// ── Question generation ───────────────────────────────────────────────────
+/**
+ * Build questions based on game mode
+ */
 function buildQuestions() {
-  // Repeat the shape array enough times so we can take 20 items
   const pool = [...SHAPES, ...SHAPES, ...SHAPES]
     .sort(() => Math.random() - 0.5)
     .slice(0, TOTAL);
 
-  return pool.map(shape => ({
-    shape,
-    correct:  Math.random() < 0.5 ? 'big' : 'small',  // which size is correct
-    bigLeft:  Math.random() < 0.5,                     // big shape on the left?
-    bigPx:    randInt(160, 200),
-    smallPx:  randInt(90, 120)
-  }));
+  return pool.map((shape, index) => {
+    if (gameMode === 'random') {
+      // Original mode: random big/small
+      return {
+        shape,
+        correct:  Math.random() < 0.5 ? 'big' : 'small',
+        bigLeft:  Math.random() < 0.5,
+        bigPx:    randInt(160, 200),
+        smallPx:  randInt(90, 120)
+      };
+    } else if (gameMode === 'big-only') {
+      // Only big shapes - correct answer is always "big"
+      return {
+        shape,
+        correct:  'big',
+        bigLeft:  Math.random() < 0.5,
+        bigPx:    randInt(160, 200),
+        smallPx:  randInt(90, 120)
+      };
+    } else if (gameMode === 'small-only') {
+      // Only small shapes - correct answer is always "small"
+      return {
+        shape,
+        correct:  'small',
+        bigLeft:  Math.random() < 0.5,
+        bigPx:    randInt(160, 200),
+        smallPx:  randInt(90, 120)
+      };
+    } else if (gameMode === 'alternating') {
+      // Alternating: different shapes and random sizes each time
+      // Correct answer alternates between big and small
+      const isEven = index % 2 === 0;
+      return {
+        shape,
+        correct:  isEven ? 'big' : 'small',
+        bigLeft:  Math.random() < 0.5,
+        bigPx:    randInt(160, 200),
+        smallPx:  randInt(90, 120)
+      };
+    }
+  });
 }
 
-// ── Rendering ─────────────────────────────────────────────────────────────────
+// ── Rendering ──────────────────────────────────────────────────────────
 function makeSVG(shape, px) {
   return (
     `<svg viewBox="0 0 100 100" width="${px}" height="${px}"` +
@@ -182,7 +219,7 @@ function renderQuestion() {
   speak(q.correct === 'big' ? 'stór' : 'lítill');
 }
 
-// ── Answer handling ───────────────────────────────────────────────────────────
+// ── Answer handling ────────────────────────────────────────────────────
 function answer(card) {
   if (locked) return;
   locked = true;
@@ -214,7 +251,7 @@ function answer(card) {
   }, randInt(700, 1200));
 }
 
-// ── Game lifecycle ────────────────────────────────────────────────────────────
+// ── Game lifecycle ────────────────────────────────────────────────────
 function startGame() {
   questions = buildQuestions();
   idx   = 0;
@@ -223,11 +260,19 @@ function startGame() {
   renderQuestion();
 }
 
-// ── Event listeners ───────────────────────────────────────────────────────────
-startBtn.addEventListener('click',   startGame);
-restartBtn.addEventListener('click', startGame);
+// ── Event listeners ────────────────────────────────────────────────────
+// Mode selection buttons
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    gameMode = e.currentTarget.dataset.mode;
+    startGame();
+  });
+});
 
-startGame(); // Byrja leikinn sjálfkrafa við hleðslu síðunnar
+startBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', () => {
+  showScreen('start');
+});
 
 replayBtn.addEventListener('click', () => {
   if (idx < TOTAL) {
