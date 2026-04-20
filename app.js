@@ -77,48 +77,48 @@ function showScreen(name) {
 }
 
 function buildQuestions() {
-  const pool = [...SHAPES, ...SHAPES, ...SHAPES]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, TOTAL);
-
-  return pool.map((shape, index) => {
+  const questions = [];
+  
+  for (let i = 0; i < TOTAL; i++) {
+    const randomShape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    
     if (gameMode === 'random') {
-      return {
-        shape,
+      questions.push({
+        shape: randomShape,
         correct: Math.random() < 0.5 ? 'big' : 'small',
         bigLeft: Math.random() < 0.5,
         bigPx: randInt(160, 200),
         smallPx: randInt(90, 120)
-      };
+      });
     } else if (gameMode === 'big-only') {
-      return {
-        shape,
+      questions.push({
+        shape: randomShape,
         correct: 'big',
         bigLeft: Math.random() < 0.5,
         bigPx: randInt(160, 200),
         smallPx: randInt(90, 120)
-      };
+      });
     } else if (gameMode === 'small-only') {
-      return {
-        shape,
+      questions.push({
+        shape: randomShape,
         correct: 'small',
         bigLeft: Math.random() < 0.5,
         bigPx: randInt(160, 200),
         smallPx: randInt(90, 120)
-      };
+      });
     } else if (gameMode === 'alternating') {
-      const isEven = index % 2 === 0;
-      return {
-        shape,
-        correct: isEven ? 'big' : 'small',
+      questions.push({
+        shape: randomShape,
+        correct: i % 2 === 0 ? 'big' : 'small',
         bigLeft: Math.random() < 0.5,
         bigPx: randInt(160, 200),
         smallPx: randInt(90, 120)
-      };
+      });
     }
-  });
+  }
+  
+  return questions;
 }
-
 function makeSVG(shape, px) {
   return `<svg viewBox="0 0 100 100" width="${px}" height="${px}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shape.svg}</svg>`;
 }
