@@ -1,7 +1,5 @@
 'use strict';
 
-// ── Shape definitions ────────────────────────────────────────────────────────
-// All shapes use viewBox="0 0 100 100" and a class="shape-fill" for colour.
 const SHAPES = [
   {
     id: 'hringur',
@@ -47,14 +45,12 @@ const SHAPES = [
 
 const TOTAL = 20;
 
-// ── Game state ──────────────────────────────────────────────────────────
 let questions = [];
 let idx       = 0;
 let score     = 0;
-let locked    = false;   // prevent double-answer while feedback is shown
-let gameMode  = 'random'; // current game mode
+let locked    = false;
+let gameMode  = 'random';
 
-// ── DOM references ─────────────────────────────────────────────────────
 const screens = {
   start: document.getElementById('start-screen'),
   game:  document.getElementById('game-screen'),
@@ -70,7 +66,6 @@ const startBtn   = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 const finalEl    = document.getElementById('final-score-text');
 
-// ── Speech synthesis ────────────────────────────────────────────────────
 let icelandicVoice = null;
 
 function loadVoices() {
@@ -84,11 +79,6 @@ if (window.speechSynthesis) {
   loadVoices();
 }
 
-/**
- * Speak Icelandic text.
- * Uses an Icelandic voice when available; falls back to the default voice
- * with lang="is-IS" so the utterance text still reaches the engine unchanged.
- */
 function speak(text) {
   if (!window.speechSynthesis) return;
   speechSynthesis.cancel();
@@ -100,12 +90,10 @@ function speak(text) {
   speechSynthesis.speak(u);
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────
 function randInt(lo, hi) {
   return Math.floor(Math.random() * (hi - lo + 1)) + lo;
 }
 
-/** Scale px sizes for the current viewport so shapes always fit side-by-side. */
 function scaleFactor() {
   const vw = window.innerWidth;
   if (vw < 380) return 0.52;
@@ -120,10 +108,6 @@ function showScreen(name) {
   });
 }
 
-// ── Question generation ───────────────────────────────────────────────────
-/**
- * Build questions based on game mode
- */
 function buildQuestions() {
   const pool = [...SHAPES, ...SHAPES, ...SHAPES]
     .sort(() => Math.random() - 0.5)
@@ -131,7 +115,6 @@ function buildQuestions() {
 
   return pool.map((shape, index) => {
     if (gameMode === 'random') {
-      // Original mode: random big/small
       return {
         shape,
         correct:  Math.random() < 0.5 ? 'big' : 'small',
@@ -140,7 +123,6 @@ function buildQuestions() {
         smallPx:  randInt(90, 120)
       };
     } else if (gameMode === 'big-only') {
-      // Only big shapes - correct answer is always "big"
       return {
         shape,
         correct:  'big',
@@ -149,7 +131,6 @@ function buildQuestions() {
         smallPx:  randInt(90, 120)
       };
     } else if (gameMode === 'small-only') {
-      // Only small shapes - correct answer is always "small"
       return {
         shape,
         correct:  'small',
@@ -158,8 +139,6 @@ function buildQuestions() {
         smallPx:  randInt(90, 120)
       };
     } else if (gameMode === 'alternating') {
-      // Alternating: different shapes and random sizes each time
-      // Correct answer alternates between big and small
       const isEven = index % 2 === 0;
       return {
         shape,
@@ -172,7 +151,6 @@ function buildQuestions() {
   });
 }
 
-// ── Rendering ──────────────────────────────────────────────────────────
 function makeSVG(shape, px) {
   return (
     `<svg viewBox="0 0 100 100" width="${px}" height="${px}"` +
@@ -197,7 +175,6 @@ function renderQuestion() {
   const leftType = q.bigLeft ? 'big'   : 'small';
   const rightType = q.bigLeft ? 'small' : 'big';
 
-  // Inject SVG markup
   shapeLeft.innerHTML     = makeSVG(q.shape, leftPx);
   shapeLeft.dataset.type  = leftType;
   shapeLeft.className     = 'shape-card';
@@ -206,25 +183,20 @@ function renderQuestion() {
   shapeRight.dataset.type = rightType;
   shapeRight.className    = 'shape-card';
 
-  // Size the card to snugly wrap the shape
   const pad = 32;
   shapeLeft.style.minWidth   = shapeLeft.style.minHeight  = (leftPx  + pad) + 'px';
   shapeRight.style.minWidth  = shapeRight.style.minHeight = (rightPx + pad) + 'px';
 
-  // Enable buttons
   shapeLeft.disabled  = false;
   shapeRight.disabled = false;
 
-  // Announce the target word
   speak(q.correct === 'big' ? 'stór' : 'lítill');
 }
 
-// ── Answer handling ────────────────────────────────────────────────────
 function answer(card) {
   if (locked) return;
   locked = true;
 
-  // Disable both cards so no second click is possible
   shapeLeft.disabled  = true;
   shapeRight.disabled = true;
 
@@ -251,7 +223,6 @@ function answer(card) {
   }, randInt(700, 1200));
 }
 
-// ── Game lifecycle ────────────────────────────────────────────────────
 function startGame() {
   questions = buildQuestions();
   idx   = 0;
@@ -260,8 +231,6 @@ function startGame() {
   renderQuestion();
 }
 
-// ── Event listeners ────────────────────────────────────────────────────
-// Mode selection buttons
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
     gameMode = e.currentTarget.dataset.mode;
