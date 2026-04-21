@@ -1,21 +1,10 @@
-// speech.js
+let speechEnded = false;
 
-const speechRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-
-// Speech ended tracking
-function handleSpeechEnd() {
-    console.log('Speech has ended');
+function showFeedback(isCorrect) {
+    const feedbackElement = document.getElementById('feedback');
+    feedbackElement.innerHTML = isCorrect ? '👍' : '👎';
 }
 
-// Feedback icons
-const feedbackIcons = document.querySelectorAll('.feedback-icon');
-feedbackIcons.forEach(icon => {
-    icon.addEventListener('click', function() {
-        // Add feedback logic here
-    });
-});
-
-// Locked buttons while speaking
 function lockButtons() {
     const buttons = document.querySelectorAll('button');
     buttons.forEach(button => button.disabled = true);
@@ -26,17 +15,20 @@ function unlockButtons() {
     buttons.forEach(button => button.disabled = false);
 }
 
-speechRecognition.onstart = lockButtons;
-speechRecognition.onend = function() {
-    unlockButtons();
-    handleSpeechEnd();
-};
-
-// Confetti animation
-function showConfetti() {
-    // Implementation of confetti animation can be added here
+function createConfetti() {
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('span');
+        confetti.innerHTML = '🎉';
+        confetti.style.position = 'absolute';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = Math.random() * 100 + 'vh';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+    }
 }
 
-// Call showConfetti() at the end of the game
-
-// Other game logic here...
+// Add event listener for speech end tracking
+const speaker = new SpeechSynthesisUtterance();
+speaker.onend = function() {
+    speechEnded = true;
+};
