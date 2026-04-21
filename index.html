@@ -1,71 +1,25 @@
 <!DOCTYPE html>
-<html lang="is">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stór og Lítill</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LitillStor</title>
 </head>
 <body>
-
-  <!-- Start screen with mode selection -->
-  <div id="start-screen" class="screen active">
-    <div class="card center-card">
-      <div class="logo">🔷</div>
-      <h1>Stór og Lítill</h1>
-      <p class="subtitle">Veldu hvernig leik þú vilt spila!</p>
-      
-      <div class="mode-selector">
-        <button class="mode-btn" data-mode="big-only">
-          <span class="mode-icon">📏</span>
-          <span class="mode-title">Stór</span>
-          <span class="mode-desc">Bara stór form</span>
-        </button>
-        <button class="mode-btn" data-mode="small-only">
-          <span class="mode-icon">🤏</span>
-          <span class="mode-title">Lítill</span>
-          <span class="mode-desc">Bara lítil form</span>
-        </button>
-        <button class="mode-btn" data-mode="random">
-          <span class="mode-icon">🎲</span>
-          <span class="mode-title">Stór og Lítill</span>
-          <span class="mode-desc">Stór og lítil form</span>
-        </button>
-        <button class="mode-btn" data-mode="alternating">
-          <span class="mode-icon">🔄</span>
-          <span class="mode-title">Mismunandi Form</span>
-          <span class="mode-desc">Tvö mismunandi form</span>
-        </button>
-      </div>
+    <div id="app">
+        <!-- other content -->
+        <div class="shape-card">
+            <button class="shape-left">
+                <span class="feedback-icon"></span>
+                Left Shape
+            </button>
+            <button class="shape-right">
+                <span class="feedback-icon"></span>
+                Right Shape
+            </button>
+        </div>
+        <div id="confetti-container"></div>
+        <!-- other content -->
     </div>
-  </div>
-
-  <!-- Game screen -->
-  <div id="game-screen" class="screen">
-    <div class="hud">
-      <span id="progress-text">Spurning 1/20</span>
-      <span id="score-text">Stig: 0</span>
-      <button id="menu-btn" class="btn-menu">≡ Valmynd</button>
-    </div>
-
-    <div class="shapes-row">
-      <button id="shape-left" class="shape-card"></button>
-      <button id="shape-right" class="shape-card"></button>
-    </div>
-
-    <button id="replay-btn" class="btn-secondary">🔊 Spila aftur</button>
-  </div>
-
-  <!-- End screen -->
-  <div id="end-screen" class="screen">
-    <div class="card center-card">
-      <div class="logo">🎉</div>
-      <h1>Lokið!</h1>
-      <p id="final-score-text" class="subtitle">Þú fékkst 0 af 20 rétt!</p>
-      <button id="restart-btn" class="btn-primary">🔄 Byrja aftur</button>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
 </body>
 </html>
